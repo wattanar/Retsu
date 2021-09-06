@@ -1,12 +1,13 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Web.DataAccess.Entities;
 
-namespace src.Web.DataAccess.Config
+namespace Web.DataAccess.Config
 {
-    public class UserConfig : IEntityTypeConfiguration<User>
+    public class UserConfig : IEntityTypeConfiguration<UserTable>
     {
-        public void Configure(EntityTypeBuilder<User> builder)
+        public void Configure(EntityTypeBuilder<UserTable> builder)
         {
         }
     }

@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using src.Web.DataAccess.Config;
+using Web.DataAccess.Config;
 using Web.DataAccess.Entities;
 
 namespace Web.DataAccess.Contexts
@@ -13,8 +13,12 @@ namespace Web.DataAccess.Contexts
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new UserConfig());
+            builder.ApplyConfiguration(new RoleConfig());
+            builder.ApplyConfiguration(new UserRoleConfig());
         }
 
-        public DbSet<User> User { get; set; }
+        public DbSet<UserTable> User { get; set; }
+        public DbSet<RoleTable> Role { get; set; }
+        public DbSet<UserRoleTable> UserRole { get; set; }
     }
 }

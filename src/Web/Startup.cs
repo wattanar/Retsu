@@ -12,7 +12,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Web.Modules.User.Interfaces;
+using Web.Modules.User.Services;
 using Web.DataAccess.Contexts;
+using Web.Modules.Utils.Interfaces;
+using Web.Modules.Utils.Services;
+using Newtonsoft.Json;
 
 namespace Web
 {
@@ -27,6 +32,11 @@ namespace Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddRouting(options =>
+            {
+                options.LowercaseUrls = true;
+            });
+
             services.Configure<RequestLocalizationOptions>(options =>
             {
                 options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("en-Us");
@@ -34,7 +44,12 @@ namespace Web
                 options.RequestCultureProviders.Clear();
             });
 
-            services.AddRazorPages();
+            services
+                .AddRazorPages()
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                });
 
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -53,7 +68,10 @@ namespace Web
                 });
 
             services
-                .AddDbContextPool<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
+                .AddDbContextPool<DataContext>(options => options.UseSqlite(Configuration.GetConnectionString("Default")));
+
+            services.AddScoped<IPasswordService, PasswordService>();
+            services.AddScoped<IUserService, UserService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
